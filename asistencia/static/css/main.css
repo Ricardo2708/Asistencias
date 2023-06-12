@@ -1,0 +1,44 @@
+
+.contenedor{
+    width: min(80%, 120rem);
+    margin: 0rem auto;
+    margin-top: 0;
+}
+
+.border-quitar{
+    border-right: 0px;
+}
+
+.swal2-popup{
+    width: 1000px !important;
+    height: 450px !important;
+} 
+
+.swal2-actions{
+    display: none !important;
+}
+
+.swal2-html-container{
+    overflow-y: hidden !important;
+}
+
+.boton-enviar{
+    width: 20rem;
+    margin-top: .5rem;
+    padding: 0.5rem 0 !important;
+    text-transform: uppercase !important;
+    font-weight: 400 !important;
+}
+
+.boton-enviar i{
+    padding: 0rem 0.3rem !important;
+}
+
+.label-formulario{
+    font-weight: 400 !important;
+}
+
+.input-form{
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+}
