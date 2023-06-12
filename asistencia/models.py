@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.db import connection
 from django.core.exceptions import ValidationError
+from ckeditor.fields import RichTextField
 
 ESTATUS ={
     ('EVENTUAL', 'EVENTUAL'),
@@ -45,7 +46,7 @@ class Empleado_datos(models.Model):
     telefono= models.CharField(max_length=10, verbose_name="Telefono:")
     cuenta_banco = models.CharField(max_length=20, verbose_name="Cuenta Banco: ")
     estado_empleado = models.BooleanField(verbose_name="Estado Empleado:", default=True)
-    observación = models.TextField(verbose_name="Observación:", blank=True)
+    observación = RichTextField(verbose_name="Observación:", blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creado El :')
     updated_at = models.DateTimeField(auto_now =True, verbose_name='Actualizado El :')
 
@@ -106,3 +107,24 @@ class Asistencia(models.Model):
 
     def __str__(self):
         return f'{self.titulo_asistencia}'
+    
+
+class Asistencia2(models.Model):
+    titulo_asistencia2 = models.CharField(max_length=100, verbose_name='Titulo Registro:', default= f"DIA - {today2}", help_text=' --No Cambie el formato--' )
+    empleado2 = models.ManyToManyField(Empleados, verbose_name="Empleado:",related_name='opcion2', default='')
+    fecha2 = models.CharField(max_length=100, verbose_name='Fecha :', default=today)
+    num_planilla2 = models.CharField(max_length=100, verbose_name="Planilla:", default='P', help_text='Numero De Planilla - Ejemplo:(P1)')
+    comentarios2 = models.TextField(verbose_name="Comentarios:", blank=True, default=f"Asistencia Completada: {today}")
+    created_at2 = models.DateTimeField(auto_now_add=True, verbose_name='Creado El :')
+    updated_at2 = models.DateTimeField(auto_now =True, verbose_name='Actualizado El :')
+
+    class Meta:
+        verbose_name = "Asistencia 26 Al 10"
+        verbose_name_plural = "Asistencias 26 - 10"
+
+    def clean(self):
+        self.titulo_asistencia2 = (self.titulo_asistencia2).upper()
+        self.num_planilla2 = (self.num_planilla2).upper()
+
+    def __str__(self):
+        return f'{self.titulo_asistencia2}'

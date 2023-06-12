@@ -39,9 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'asistencia'
+    'asistencia',
+    'ckeditor'
     
 ]
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'height': 200,
+        'width': 500,
+    },
+}
 
 JAZZMIN_SETTINGS = {
     "site_title": "Administracion",
@@ -83,6 +91,10 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+        "asistencia.Empleado_datos": "fas fa-plus",
+        "asistencia.Empleados": "fas fa-plus" ,
+        "asistencia.Asistencia": "fas fa-tasks" ,
+        "asistencia.Asistencia2": "fas fa-tasks" ,
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
@@ -96,7 +108,6 @@ JAZZMIN_SETTINGS = {
 }
 
 JAZZMIN_SETTINGS["show_ui_builder"] = True
-
 
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,

@@ -27,7 +27,8 @@
     margin-top: .5rem;
     padding: 0.5rem 0 !important;
     text-transform: uppercase !important;
-    font-weight: 400 !important;
+    font-weight: 500 !important;
+    font-size: 1rem !important;
 }
 
 .boton-enviar i{
@@ -35,7 +36,7 @@
 }
 
 .label-formulario{
-    font-weight: 400 !important;
+    font-weight: 500 !important;
 }
 
 .input-form{

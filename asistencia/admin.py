@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Empleado_datos,Empleados,Asistencia
+from .models import Empleado_datos,Empleados,Asistencia,Asistencia2
 from import_export.admin import ImportExportModelAdmin
 
 
@@ -32,13 +32,25 @@ class EmpleadosAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 class AsistenciaAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     search_fields=('num_planilla', 'titulo_asistencia')
     list_filter=('created_at','updated_at','num_planilla')
-    list_per_page = 25
+    list_per_page = 15
     date_hierarchy= 'created_at'
     list_display=( 
         'titulo_asistencia',
         'fecha',
         'num_planilla',
         'comentarios'
+     )
+    
+class Asistencia2Admin(ImportExportModelAdmin,admin.ModelAdmin):
+    search_fields=('num_planilla2', 'titulo_asistencia2')
+    list_filter=('created_at2','updated_at2','num_planilla2')
+    list_per_page = 15
+    date_hierarchy= 'created_at2'
+    list_display=( 
+        'titulo_asistencia2',
+        'fecha2',
+        'num_planilla2',
+        'comentarios2'
      )
 
 
@@ -47,7 +59,7 @@ class AsistenciaAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 admin.site.register(Empleado_datos, Empleados_datosAdmin)
 admin.site.register(Empleados, EmpleadosAdmin)
 admin.site.register(Asistencia, AsistenciaAdmin)
-
+admin.site.register(Asistencia2, Asistencia2Admin)
 
 #Configuracion Del Panel
 title = "Administracion"
