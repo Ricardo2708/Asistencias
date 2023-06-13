@@ -1,7 +1,14 @@
 from django.shortcuts import render
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.db import connection
 from calendar import monthrange
+from openpyxl import load_workbook
+from .models import Empleado_datos
+
+import win32com
+from win32com import client
+import os
+import pythoncom
 
 def index(request):
     if request.method == 'POST':
@@ -312,7 +319,6 @@ def index(request):
         create_pdf()
         return FileResponse(open('Asistencia.pdf', 'rb'), content_type='application/pdf')
     return render(request,'index.html')
-
 
 def index2(request):
     if request.method == 'POST':
@@ -740,10 +746,6 @@ def index2(request):
         workbook.close()
 
         def create_pdf():
-            import win32com
-            from win32com import client
-            import os
-            import pythoncom
             #currentDir = os.path.abspath('.')
             currentDir = os.getcwd()
             xlApp = win32com.client.Dispatch("Excel.Application",pythoncom.CoInitialize())
@@ -755,3 +757,99 @@ def index2(request):
         create_pdf()
         return FileResponse(open('Asistencia.pdf', 'rb'), content_type='application/pdf')
     return render(request,'index2.html')
+
+def ap_personal(request):
+    if request.method == 'POST':
+        empleado = request.POST.get('empleado')
+        accion = request.POST.get('accion')
+        fecha = request.POST.get('fecha')
+        observacion = request.POST.get('observacion')
+
+        def fecha_es():
+            fecha_asistencia = fecha.split("-")
+            fecha_var = fecha_asistencia[2]
+            fecha_var2 = fecha_asistencia[1]
+            fecha_var3 = fecha_asistencia[0]
+            mesesDic = {
+                "01":'Enero',
+                "02":'Febrero',
+                "03":'Marzo',
+                "04":'Abril',
+                "05":'Mayo',
+                "06":'Junio',
+                "07":'Julio ',
+                "08":'Agosto',
+                "09":'Septiembre',
+                "10":'Octubre',
+                "11":'Noviembre',
+                "12":'Diciembre'
+            }
+            mes = mesesDic[str(fecha_var2)][:9]
+            fecha_final = f"{fecha_var} de {mes} del {fecha_var3}"
+            return fecha_final
+
+        empleado = empleado.split('|')[0]
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT nombre_empleado_dato, cargo, departamento, honorario, dia_ingreso, numero_empleado FROM asistencia_empleado_datos WHERE nombre_empleado_dato = %s",[empleado.strip()])
+            empleado_dato = cursor.fetchall()
+        
+        for datos_empleado in empleado_dato:
+            def crear_ap():
+                currentDir = os.getcwd()
+                workbook = load_workbook(os.path.join(currentDir,"Ap.xlsx"))
+                worksheet = workbook.active
+
+                worksheet['G7'] = datos_empleado[0]
+                worksheet['G8'] = datos_empleado[1]
+                worksheet['G9'] = datos_empleado[2]
+                worksheet['Q8'] = datos_empleado[3]
+                worksheet['Q9'] = datos_empleado[4]
+                worksheet['Q10'] = datos_empleado[5]
+                worksheet['C44'] = fecha_es()
+                worksheet['B49'] = observacion
+
+                #! Primera Seccion
+
+                worksheet['D14'] = 'X' if accion == '1' else ''
+                worksheet['D16'] = 'X' if accion == '2' else ''
+                worksheet['D18'] = 'X' if accion == '3' else ''
+                worksheet['D20'] = 'X' if accion == '4' else ''
+
+                worksheet['D22'] = 'X' if accion == '5' else ''
+                worksheet['D24'] = 'X' if accion == '6' else ''
+                worksheet['D26'] = 'X' if accion == '7' else ''
+                worksheet['D28'] = 'X' if accion == '8' else ''
+
+                worksheet['D30'] = 'X' if accion == '9' else ''
+                worksheet['D32'] = 'X' if accion == '10' else ''
+                worksheet['D34'] = 'X' if accion == '11' else ''
+                worksheet['D36'] = 'X' if accion == '12' else ''
+                worksheet['D38'] = 'X' if accion == '13' else ''
+                worksheet['D40'] = 'X' if accion == '14' else ''
+
+                #! Segunda Seccion
+
+                worksheet['L14'] = 'X' if accion == '15' else ''
+                worksheet['L16'] = 'X' if accion == '16' else ''
+                worksheet['L18'] = 'X' if accion == '17' else ''
+                worksheet['L20'] = 'X' if accion == '18' else ''
+
+                worksheet['L22'] = 'X' if accion == '19' else ''
+                worksheet['L24'] = 'X' if accion == '20' else ''
+                worksheet['L26'] = 'X' if accion == '21' else ''
+                worksheet['L28'] = 'X' if accion == '22' else ''
+
+                worksheet['L30'] = 'X' if accion == '23' else ''
+                worksheet['L32'] = 'X' if accion == '24' else ''
+                worksheet['L34'] = 'X' if accion == '25' else ''
+                worksheet['L36'] = 'X' if accion == '26' else ''
+                worksheet['L38'] = 'X' if accion == '27' else ''
+                worksheet['L40'] = 'X' if accion == '28' else ''
+
+                workbook.save("Ap.xlsx")
+            crear_ap()
+        
+        return FileResponse(open('Ap.xlsx', 'rb'), content_type='application/xlsx')
+
+    empleados = Empleado_datos.objects.all()
+    return render(request, 'ap_personal.html',{'empleados': empleados})

@@ -22,6 +22,6 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = [
     path('index/',login_required(views.index), name='index'),
     path('index2/',login_required(views.index2), name='index2'),
+    path('ap_personal/',login_required(views.ap_personal), name='personal'),
     path('', admin.site.urls),
-    
 ]
